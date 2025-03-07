@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Sorpresa! Latin Mafia en CDMX</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #f7d046;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .ticket-container {
+            position: relative;
+            margin: 40px auto;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        
+        .ticket {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .ticket-left {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ticket-right {
+            width: 30%;
+            background: #f7d046;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #121212;
+            font-weight: bold;
+            padding: 20px 10px;
+            position: relative;
+        }
+        
+        .ticket-right::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -15px;
+            height: 100%;
+            width: 30px;
+            background-image: radial-gradient(circle at 0 50%, transparent 15px, #f7d046 15px);
+            background-size: 30px 30px;
+            background-repeat: repeat-y;
+        }
+        
+        .event-name {
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .event-details {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .ticket-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .ticket-info div {
+            text-align: left;
+        }
+        
+        .ticket-info-label {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-bottom: 3px;
+        }
+        
+        .ticket-info-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .date-circle {
+            width: 80px;
+            height: 80px;
+            background: #121212;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .date-day {
+            font-size: 32px;
+            line-height: 1;
+        }
+        
+        .date-month {
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        
+        .ticket-number {
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .message-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .message {
+            padding: 20px;
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .highlight {
+            color: #f7d046;
+            font-weight: bold;
+        }
+        
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f7d046;
+            opacity: 0;
+        }
+        
+        .cta-button {
+            background-color: #f7d046;
+            color: #121212;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: none;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(247, 208, 70, 0.3);
+        }
+        
+        .audio-player {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/api/placeholder/800/600') center/cover;
+            opacity: 0.2;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>¡Tengo una sorpresa para ti!</h1>
+            <p>Haz clic en el boleto para descubrir el mensaje</p>
+        </div>
+        
+        <div class="ticket-container" id="ticketContainer">
+            <div class="ticket">
+                <div class="background-overlay"></div>
+                <div class="ticket-left">
+                    <div>
+                        <div class="event-name">Latin Mafia</div>
+                        <div class="event-details">En concierto - CDMX</div>
+                    </div>
+                    
+                    <div class="ticket-info">
+                        <div>
+                            <div class="ticket-info-label">LUGAR</div>
+                            <div class="ticket-info-value">Foro GNP - CDMX</div>
+                        </div>
+                        <div>
+                            <div class="ticket-info-label">HORA</div>
+                            <div class="ticket-info-value">21:00 hrs</div>
+                        </div>
+                        <div>
+                            <div class="ticket-info-label">ZONA</div>
+                            <div class="ticket-info-value">General</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ticket-right">
+                    <div class="date-circle">
+                        <div class="date-day">31</div>
+                        <div class="date-month">MAY</div>
+                    </div>
+                    <div class="ticket-number">BOLETOS #0225</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="message-container" id="messageContainer">
+            <div class="message">
+                <p>Porque <span class="highlight">nada me hará cambiar</span> lo que siento por ti...</p>
+                <p>Quiero invitarte a vivir esta experiencia juntos, porque <span class="highlight">no hay nada mejor</span> que compartir momentos especiales contigo.</p>
+                <p>¡Vamos a ver a Latin Mafia juntos! ❤️</p>
+                <p class="highlight">31 de Mayo - CDMX</p>
+            </div>
+            <button class="cta-button" id="ctaButton">¡Confirmar asistencia!</button>
+        </div>
+        
+        <audio id="backgroundMusic" class="audio-player" controls>
+            <source src="#" type="audio/mpeg">
+        </audio>
+    </div>
+    
+    <div class="animation-container" id="animationContainer"></div>
+    
+    <script>
+        // Ticket click effect
+        const ticketContainer = document.getElementById('ticketContainer');
+        const messageContainer = document.getElementById('messageContainer');
+        const ctaButton = document.getElementById('ctaButton');
+        const animationContainer = document.getElementById('animationContainer');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        
+        let isExpanded = false;
+        
+        ticketContainer.addEventListener('click', function() {
+            if (!isExpanded) {
+                // Flip the ticket
+                this.style.transform = 'rotateY(360deg)';
+                
+                // Show message
+                setTimeout(() => {
+                    messageContainer.style.maxHeight = '500px';
+                    ctaButton.style.display = 'inline-block';
+                    createConfetti();
+                    // No se reproduce música automáticamente para evitar problemas con navegadores
+                    backgroundMusic.style.display = 'block';
+                }, 500);
+                
+                isExpanded = true;
+            } else {
+                // Reset
+                this.style.transform = 'rotateY(0deg)';
+                messageContainer.style.maxHeight = '0';
+                ctaButton.style.display = 'none';
+                backgroundMusic.style.display = 'none';
+                isExpanded = false;
+            }
+        });
+        
+        // Confetti animation
+        function createConfetti() {
+            animationContainer.style.display = 'block';
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random position, color and size
+                const colors = ['#f7d046', '#ffffff', '#e74c3c', '#3498db'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.opacity = Math.random();
+                
+                animationContainer.appendChild(confetti);
+                
+                // Animation
+                const animation = confetti.animate(
+                    [
+                        { transform: 'translate3d(0, 0, 0)', opacity: 1 },
+                        { transform: `translate3d(${Math.random() * 100 - 50}px, ${window.innerHeight}px, 0)`, opacity: 0 }
+                    ],
+                    {
+                        duration: Math.random() * 3000 + 2000,
+                        easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+                        delay: Math.random() * 1500
+                    }
+                );
+                
+                animation.onfinish = () => {
+                    confetti.remove();
+                };
+            }
+            
+            setTimeout(() => {
+                animationContainer.style.display = 'none';
+            }, 5000);
+        }
+        
+        // CTA button animation
+        ctaButton.addEventListener('click', function() {
+            this.innerHTML = '¡Confirmado! ❤️';
+            this.disabled = true;
+            createConfetti();
+        });
+    </script>
+</body>
+</html>
